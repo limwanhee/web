@@ -11,10 +11,14 @@ router.get('/', function(req, res, next) {
 
 //게시글 데이터 목록
 router.get('/list.json', async function(req, res){
+    const page = 4;
+    const size = 10;
+    const start = (page-1) * size;
     con = await getConnection();
     try{
         con = await getConnection();
-        let sql = "select * from view_board where id <= 10 order by id desc";
+        let sql = "select * from view_board order by id desc ";
+        sql += `offset ${start} rows fetch next ${size} rows only`;
         let result = await con.execute(sql, {}, {outFormat:oracledb.OUT_FORMAT_OBJECT});
         res.send(result.rows);
         console.log(result.rows);
