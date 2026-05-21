@@ -19,14 +19,41 @@
                     <a class="nav-link" href="/haksa/cou">강좌관리</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">게시글</a>
+                    <a class="nav-link" href="/board">게시글</a>
                 </li>   
             </ul>
-            <ul class = "navbar-nav">
+            <ul class = "navbar-nav login">
                 <li class="nav-item">
                     <a class="nav-link active" href="/users/login">로그인</a>
+                </li>
+            </ul>
+            <ul class = "navbar-nav logout">
+                <li class="nav-item">
+                    <a class="nav-link active scode" href="#"></a>
+                </li>                
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">로그아웃</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+<script>
+    const scode = sessionStorage.getItem("scode");
+    const sname = sessionStorage.getItem("sname");
+    if(!scode){
+        $(".login").show();
+        $(".logout").hide();
+    }else{
+        $(".login").hide();
+        $(".logout").show();
+        $(".logout .scode").html(`${sname}(${scode})`);
+    }
+    $(".logout").on("click", "a", function(e){
+        e.preventDefault();
+        if(confirm("정말로 로그아웃 하실래요?")){
+            sessionStorage.clear();
+            location.href = "/";
+        }
+    })
+</script>
