@@ -13,12 +13,12 @@ router.get('/', function(req, res, next) {
 router.get('/list.json', async function(req, res){
     const page = 4;
     const size = 10;
-    const start = (page-1) * size;
+    const offset_rows = (page-1) * size;
     con = await getConnection();
     try{
         con = await getConnection();
         let sql = "select * from view_board order by id desc ";
-        sql += `offset ${start} rows fetch next ${size} rows only`;
+        sql += `offset ${offset_rows} rows fetch next ${size} rows only`;
         let result = await con.execute(sql, {}, {outFormat:oracledb.OUT_FORMAT_OBJECT});
         res.send(result.rows);
         console.log(result.rows);
