@@ -22,7 +22,7 @@
             url:"/board/list.json",
             success:function(data){
                 console.log(data);
-                const temp = Handlebars.compile($("#temp").html());
+                const temp = Handlebars.compile($("#temp")).html();
                 $("#tbl").html(temp(data));
             }
         })
