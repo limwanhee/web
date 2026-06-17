@@ -27,21 +27,21 @@
     let size=5;
     getList();
 
-    $(".btn-insert").on("click", function(){
-        if(scode){
-            location.href='/posts/insert';
-        }else{
-            sessionStorage.setItem("target", "/posts/insert");
-            location.href='/users/login';
+    $(".btn-insert").on("click", function(){ //글쓰기 버튼 누르면
+        if(scode){ //scode가 세션에 저장된게 있으면
+            location.href='/posts/insert'; //글쓰기 페이지로 가라
+        }else{ //없으면
+            sessionStorage.setItem("target", "/posts/insert"); // ?????????? 왜 있지...?
+            location.href='/users/login'; // users/login으로 보내라
         }
     });
 
-    $("#next").on("click", function(){
-        page++;
+    $("#next").on("click", function(){ //다음 버튼 누르면
+        page++; 
         getList();
     });
 
-    $("#prev").on("click", function(){
+    $("#prev").on("click", function(){ //이전 버튼 누르면
         page--;
         getList();
     });
@@ -50,9 +50,9 @@
         console.log(page, size);
         $.ajax({
             type:"get",
-            url:"/posts/list.json",
-            data:{page, size},
-            success:function(data) {
+            url:"/posts/list.json", // posts/list.json으로 요청 보내고
+            data:{page, size}, //page와 크기를 보낸다
+            success:function(data) { //성공적으로 실행 됐으면
                 console.log(data);
                 const temp = Handlebars.compile($("#temp").html());
                 $("#tbl").html(temp(data.list));

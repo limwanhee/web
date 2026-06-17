@@ -18,29 +18,29 @@
     </div>
 </div>
 <script>
-    $(frm).on("submit", function(e){
-        e.preventDefault();
-        const scode = $(frm.scode).val();
-        const pass = $(frm.pass).val();
-        if(scode == "" || pass == ""){
+    $(frm).on("submit", function(e){ //폼 이름이 frm인 폼에서 제출 버튼 눌러서 제출 되면
+        e.preventDefault(); //실행 막기
+        const scode = $(frm.scode).val(); //폼에 입력된 scode랑
+        const pass = $(frm.pass).val(); //pass 값 받아서 각각 변수에 넣고
+        if(scode == "" || pass == ""){ //비어있으면 입력해달라고 출력
             alert("학번이나 비밀번호를 입력하세요");
-            $(frm.pass).focus();
+            $(frm.pass).focus(); //비밀번호 입력 칸 포커스
         }else{
             //로그인체크
             $.ajax({
-                type : "post",
-                url : "/users/login",
-                data : {scode, pass},
-                success:function(data){
+                type : "post", //아이디, 비밀번호 넘길꺼니깐 post로 보내고
+                url : "/users/login", //주소를 /users/login 요청 보내고
+                data : {scode, pass}, //scode랑 pass 값을 보내고
+                success:function(data){ //결과가 정삭적으로 작동 했으면
                     console.log(data);
-                    if(!data){
+                    if(!data){ //정삭적으로 실행은 했으나 데이터가 없으면
                         alert("해당 학번은 없습니다");
-                    }else if(pass != data.PASS){
+                    }else if(pass != data.PASS){ //또는 만약에 비밀번호가 DB랑 다르면
                         alert("비밀번호가 일치하지 않습니다");
                     }else{
                         //로그인성공
-                        sessionStorage.setItem("scode", scode);
-                        sessionStorage.setItem("sname", data.SNAME);
+                        sessionStorage.setItem("scode", scode); //세션에 scode 저장
+                        sessionStorage.setItem("sname", data.SNAME); //세션에 sname 저장
                         location.href = "/";
                     }
                 }
