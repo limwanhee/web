@@ -22,29 +22,33 @@
     </div>
 </div>
 <script>
-    const writer = $(".writer").html();
-    const id = "<%=post.ID%>";
+    //연결되는 순서 : 게시글 리스트(list.ejs)에서 보여주고
+    //거기에서 원하는 게시판을 클릭하면 html의 내용에 의해 posts/id로 보내주면
+    //라우터에서 받고 라우터에서 실행된 것에 의해 이 페이지(read.ejs)와 선택된 id의 게시글의 내용이 보내짐
+    //post로 보냈던 값을 여기서 <%=post.ID%> 이런식으로 씀
+    const writer = $(".writer").html();  //클래스가 writer인 요소를 가지고 와라
+    const id = "<%=post.ID%>"; //post값에 저장된 id 넣기
 
-    if(writer == sname){
-        $(".btn-modify").show();
-    }else{
-        $(".btn-modify").hide();
+    if(writer == sname){ //작성자랑 로그인된 사람이랑 같으면
+        $(".btn-modify").show(); //modify 클래스 내용(글수정, 글삭제 버튼) 보여주기
+    }else{ //아니면
+        $(".btn-modify").hide(); //modify 클래스 내용(글수정, 글삭제 버튼) 숨기기
     }
 
-    $(".btn-delete").on("click", function(){
-        if(confirm(`${id}번 게시글을 삭제하실래요?`)){
+    $(".btn-delete").on("click", function(){ //글 삭제 버튼 누르면
+        if(confirm(`${id}번 게시글을 삭제하실래요?`)){ // 예 아니요가 필요하기 때문에 confirm으로 알림
             $.ajax({
-                type:"post",
-                url:"/posts/delete",
-                data:{id},
-                success:function(){
-                    location.href="/posts";
+                type:"post", // post 타입으로 보내고
+                url:"/posts/delete", // delete로 요청 보내고
+                data:{id}, //id 보내서 넣기
+                success:function(){ //실행이 성공하면 
+                    location.href="/posts"; //게시글 메인 페이지로 이동
                 }
             })
         }
     });
 
-    $(".btn-update").on("click", function(){
-        location.href=`/posts/update/${id}`;
+    $(".btn-update").on("click", function(){ //글수정 버튼 누르면
+        location.href=`/posts/update/${id}`; // 이 요청 보내기 + 현재 게시글 id와 함께
     });
 </script>

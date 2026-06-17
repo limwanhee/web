@@ -14,20 +14,20 @@
     </div>
 </div>
 <script>
-    const id="<%=post.ID%>";
+    const id="<%=post.ID%>"; //라우터로부터 받아온 post의 id 값 넣기
 
-    $(frm).on("submit", function(e){
-        e.preventDefault();
-        const title = $(frm.title).val();
-        const content = $(frm.content).val();
+    $(frm).on("submit", function(e){ //저장 버튼 누르면
+        e.preventDefault(); //막고
+        const title = $(frm.title).val(); //폼에 입력된 title 넣고
+        const content = $(frm.content).val(); //폼에 입력된 content 넣고
         console.log(id, title, content);
-        if(confirm(`${id}번 게시글을 수정하실래요?`)){
+        if(confirm(`${id}번 게시글을 수정하실래요?`)){ //게시글 수정할지 안할지 선택을 위해 confirm 사용
             $.ajax({
-                type:"post",
-                url:"/posts/update",
-                data:{id, title, content},
-                success:function(){
-                    location.href=`/posts/${id}`;
+                type:"post", //post로 요청 보내고
+                url:"/posts/update", //update로 요청
+                data:{id, title, content}, //게시글 아이디랑 제목, 내용 보내고
+                success:function(){ //성공하면 
+                    location.href=`/posts/${id}`; //다시 게시글 id의 id넣기
                 }
             })
         }

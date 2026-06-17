@@ -14,18 +14,18 @@
     </div>
 </div>
 <script>
-    $(frm).on("submit", function(e){
-        e.preventDefault();
-        const title = $(frm.title).val();
-        const content = $(frm.content).val();
-        if(title=="" || content==""){
+    $(frm).on("submit", function(e){ //저장 버튼 누르면
+        e.preventDefault(); // 취소하고
+        const title = $(frm.title).val(); //폼에 title 값 가지고와서 넣고
+        const content = $(frm.content).val(); //폼에 content 값 가지고와서 넣고
+        if(title=="" || content==""){ //제목과 내용이 비어있으면
             alert("게시글 제목을 입력하세요!");
-            frm.title.focus();
+            frm.title.focus(); //제목 포커스
         }else{
             $.ajax({
-                type:"post",
-                ulr:"/posts/insert",
-                data:{title, content, writer:scode},
+                type:"post", //post 타입으로 보내고
+                url:"/posts/insert", //insert로 요청 보낸다
+                data:{title, content, writer:scode}, //제목, 내용, 작성자(로그인한 학생의 번호) 보내기
                 success:function(){
                     location.href="/posts"
                 }

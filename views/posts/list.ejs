@@ -14,7 +14,7 @@
         {{#each .}}
         <tr>
             <td>{{ID}}</td>
-            <td><a href="/posts/{{ID}}">{{TITLE}}</a></td>
+            <td><a href="/posts/{{ID}}">{{TITLE}}</a></td> <!-- posts/게시글 아이디 형식으로 제목 보내기 (게시글 읽기 위해 있는 것) -->
             <td>{{SNAME}}({{WRITER}})</td>
             <td class="text-end">{{FMT_DATE}}</td>
          </tr>
@@ -31,7 +31,7 @@
         if(scode){ //scode가 세션에 저장된게 있으면
             location.href='/posts/insert'; //글쓰기 페이지로 가라
         }else{ //없으면
-            sessionStorage.setItem("target", "/posts/insert"); // ?????????? 왜 있지...?
+            sessionStorage.setItem("target", "/posts/insert"); //target 세션에는 /posts/insert 저장해라
             location.href='/users/login'; // users/login으로 보내라
         }
     });

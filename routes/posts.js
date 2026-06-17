@@ -34,4 +34,97 @@ router.get('/list.json',async function(req, res) { // 게시물의 총 갯수와
         if(con) await con.close();
     }
 });
+
+//게시글 등록 페이지
+router.get('/insert', function(req, res){ //insert 요청이 들어오면 (글쓰기 버튼 눌렀을 때)
+    res.render('index', {title:'글쓰기', pageName:'posts/insert.ejs'}); //insert.ejs로 보내기
+})
+
+//게시글 등록
+router.post('/insert', async function(req, res){ //게시글 저장 버튼 눌르면
+    const title=req.body.title; //제목 보낸거 저장
+    const content=req.body.content; //내용 보낸거 저장
+    const writer=req.body.writer; //작성자 보낸거 저장
+    let con;
+    try{
+        con = await getConnection();
+        let sql="insert into posts(id, title, content, writer, reg_date) values(post_id.nextval, :title, :content, :writer, sysdate)"; // posts 테이블에 id, title, content, writer, reg_date 칼럼에 제목, 내용, 작성자, 실시간 넣기
+        con.execute(sql, {title, content, writer}, {autoCommit:true}); // 바인드 변수로 위에 저장했던거 넣기
+        res.sendStatus(200);
+    }catch(err){
+        console.log(err)
+    }finally{
+        if(con) await con.close();
+    }
+})
+
+//게시글 정보 페이지
+router.get('/:id', async function(req, res){ //게시글 눌러서 어떤 id값이 들어오든
+    const id = req.params.id; // 그 게시글에 id 값을 넣고
+    let con;
+    try{
+        con = await getConnection();
+        let sql = "select * from view_posts where id=:id"; //게시글 뷰에 내용 다 가져오기
+        let result = await con.execute(sql, {id}, {outFormat:oracledb.OUT_FORMAT_OBJECT}); //바인드 변수에 id 넣고 실행
+        let post = result.rows[0]; //제일 첫번째 값 넣기
+        //console.log(post);
+        res.render('index', {title:'게시글 정보', pageName:'posts/read.ejs', post}); //read.ejs로 post로 보내라
+    }catch(err){
+        console.log('글정보', err);
+    }finally{
+        if(con) await con.close();
+    }
+});
+
+//게시글 수정 페이지
+router.get('/update/:id', async function(req, res) { //글수정 버튼 눌렀으면 (read.ejs 에 있음) (posts.ejs 에 있음)
+    const id = req.params.id; //주소에서 id값 가져오고
+    let con;
+    try{
+        con = await getConnection();
+        let sql = "select * from view_posts where id=:id"; //게시글 뷰에 있는 id가 같은 것을 가지고오고
+        let result = await con.execute(sql, {id}, {outFormat:oracledb.OUT_FORMAT_OBJECT}); //바인드 변수에 id값 넣기
+        let post = result.rows[0]; //실행되서 나온 결과 넣기
+        //console.log(post);
+        res.render('index', {title:'글수정', pageName:'posts/update.ejs', post}); //update로 요청 보내고 post에 저장된 값 넣기
+    }catch(err){
+        console.log('글수정 페이지', err.message);
+    }finally{
+        if(con) await con.close();
+    }
+});
+
+//게시글 삭제
+router.post('/delete', async function(req, res){ //삭제 버튼이 눌렸으면 (read.ejs 에 있음)
+    const id=req.body.id; //보낸 id 받고
+    let con;
+    try{
+        con = await getConnection();
+        let sql = "delete from posts where id=:id"; //게시글 테이블에 있는 게시글 id가 삭제하고자 하는 id와 같은 게시글을 삭제해라
+        await con.execute(sql, {id}, {autoCommit:true}); //바인드 변수에 id 넣어라
+        res.sendStatus(200);
+    }catch(err){
+        console.log('글삭제', err.message);
+        res.sendStatus(500);
+    }finally{
+        if(con) await con.close();
+    }
+})
+
+//게시글 수정
+router.post('/update', async function(req, res){ //저장 버튼이 눌렸으면 (update.ejs 에 있음)
+    const id=req.body.id; //받은 id값 넣고
+    const title=req.body.title; //받은 title값 넣고
+    const content=req.body.content; //받은 content값 넣고
+    console.log(id, title, content);
+    try{
+        con = await getConnection();
+        let sql="update posts set title=:title, content=:content where id=:id"; // 게시글 테이블에 id가 같은 게시글 넣기
+        await con.execute(sql, {id, title, content}, {autoCommit:true}); //바인드 변수에 id, title, content 넣기
+        res.sendStatus(200);
+    }catch(err){
+        console.log('글수정', err.message);
+    }
+});
+
 module.exports = router;
